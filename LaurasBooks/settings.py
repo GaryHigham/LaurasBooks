@@ -36,6 +36,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangocms_file',
+    'djangocms_googlemap',
+    'djangocms_inherit',
+    'djangocms_picture',
+    'djangocms_teaser',
+    'djangocms_video',
+    'djangocms_link',
+    'djangocms_text_ckeditor',  # note this needs to be above the 'cms' entry
+    'cms',  # django CMS itself
+    'mptt',  # utilities for implementing a tree
+    'menus',  # helper for model independent hierarchical website navigation
+    'south',  # Only needed for Django < 1.7
+    'sekizai',  # for javascript and css management
+    'djangocms_admin_style',  # for the admin skin. You **must** add 'djangocms_admin_style' in the list **before** 'django.contrib.admin'.
+    'django.contrib.messages',  # to enable messages framework (see :ref:`Enable messages <enable-messages>`)
 )
 
 MIDDLEWARE_CLASSES = (
