@@ -1,48 +1,27 @@
 from blog.models import BlogEntry
 from blog.serializers import BlogEntrySerializer
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from blog.serializers import UserSerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework import permissions
 
-class BlogList(APIView):
+class BlogList(generics.ListCreateAPIView):
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = BlogEntry.objects.all()
+	serializer_class = BlogEntrySerializer
 
-	def get(self, request, format=None):
-	    entries = self.queryset
-	    serializer = BlogEntrySerializer(entries, many=True)
-	    return Response(serializer.data)
+	def perform_create(self, serializer):
+		serializer.save(author=self.request.user)
 
-	def post(self, request, format=None):
-	    serializer = BlogEntrySerializer(data=request.data)
-	    if serializer.is_valid():
-	        serializer.save()
-	        return Response(serializer.data, status=status.HTTP_201_CREATED)
-	    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class BlogDetail(APIView):
+class BlogDetail(generics.RetrieveUpdateDestroyAPIView):
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = BlogEntry.objects.all()
+	serializer_class = BlogEntrySerializer
 
-	def get_object(self, pk):
-	    try:
-	        return self.queryset.get(pk=pk)
-	    except BlogEntry.DoesNotExist:
-	        raise Http404
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-	def get(self, request, pk, format=None):
-	    entry = self.get_object(pk)
-	    serializer = BlogEntrySerializer(entry)
-	    return Response(serializer.data)
-
-	def put(self, request, pk, format=None):
-	    entry = self.get_object(pk)
-	    serializer = BlogEntrySerializer(entry, data=request.data)
-	    if serializer.is_valid():
-	        serializer.save()
-	        return Response(serializer.data)
-	    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def delete(self, request, pk, format=None):
-	    entry = self.get_object(pk)
-	    entry.delete()
-	    return Response(status=status.HTTP_204_NO_CONTENT)
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

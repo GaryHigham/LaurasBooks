@@ -5,6 +5,8 @@ from blog import views
 urlpatterns = [
     url(r'^blogentries/$', views.BlogList.as_view()),
     url(r'^blogentries/(?P<pk>[0-9]+)/$', views.BlogDetail.as_view()),
+    url(r'^users/$', views.UserList.as_view()),
+	url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
